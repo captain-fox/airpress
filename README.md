@@ -1,5 +1,8 @@
 # airpress
 
+[![PyPI version](https://img.shields.io/pypi/v/airpress.svg)](https://pypi.python.org/pypi/airpress)
+[![PyPI version](https://img.shields.io/pypi/pyversions/airpress.svg)](https://pypi.python.org/pypi/airpress)
+
 Compression tool for PKPass archives.
 
 AirPress does compression in runtime memory without creating temporary files or directories,
