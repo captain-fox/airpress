@@ -2,14 +2,14 @@
 
 A frustration-free compression tool for PKPass files
 
-AirPress let's you sign and compress Apple PKPass archives in runtime memory without creating temporary files or directories.
-
 ## Installation
 From PyPI:
 
 `pip install airpress`
 
 ## Quickstart
+AirPress is a tool to sign and compress Apple PKPass archives. 
+Compression and signature occur in runtime memory without creating temporary files or directories.
 
 ```python
 from airpress import PKPass
@@ -23,11 +23,11 @@ p = PKPass(
 )
 # `password` argument is optional
 p.sign(cert=bytes(...), key=bytes(...), password=bytes(...))
-# Calling `bytes()` on signed `PKPass` will compress it into zip archive and return its `bytes` representation. 
-# In most cases you're likely to return `pkpass` as http response and will need exactly `bytes` object.
-# It's up to you how to handle `.pkpass` archive from this point. 
-_ = bytes(p)
+# Calling `bytes()` on signed `PKPass` will compress it into zip archive and return its `bytes` representation.
+_ = bytes(p) 
 ```
+In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need.
+It's up to you how to handle `.pkpass` archive from this point. 
 
 ## Example
 
