@@ -128,10 +128,7 @@ class PKPass:
         """
         assert 'pass.json' in self.__assets, 'Pass package must contain `pass.json`'
         if not any(item in self.__assets for item in PKPASS_ICONS):
-            msg = (
-                f'Pass package must have an icon in at least '
-                f'one resolution: {PKPASS_ICONS}'
-            )
+            msg = f'Pass package must have an icon in at least one resolution: {PKPASS_ICONS}'
             raise AssertionError(msg)
         return {name: sha1(data).hexdigest() for name, data in self.__assets.items()}
 
@@ -173,9 +170,8 @@ class PKPass:
 
         if not all([cert, key, wwdr]):
             msg = (
-                'You must provide `certificate`, `key`, [optionally] `password` and `wwdr` '
-                'certificate during PKPass initialization, explicitly or as arguments to '
-                '`.sign()` method.'
+                'You must provide `certificate`, `key`[, `password` and `wwdr` certificate] '
+                'during PKPass initialization, explicitly or as arguments to `.sign()` method.'
             )
             raise AssertionError(msg)
         self._signature = pkcs7_sign(cert, key, wwdr, self.manifest, password)
