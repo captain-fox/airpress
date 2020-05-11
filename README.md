@@ -57,12 +57,13 @@ icon = open(os.path.join(os.path.dirname(__file__), '...your_path_to/icon.png'),
 icon_2x = open(os.path.join(os.path.dirname(__file__), '...your_path_to/icon@2x.png'), 'rb').read()
 logo = open(os.path.join(os.path.dirname(__file__), '...your_path_to/logo.png'), 'rb').read()
 logo_2x = open(os.path.join(os.path.dirname(__file__), '...your_path_to/logo@2x.png'), 'rb').read()
-
+# It is more likely that you'll be dumping python dictionary into json file, but as an example `pass.json` is a file
 pass_json = open(os.path.join(os.path.dirname(__file__), '...your_path_to/pass.json'), 'rb').read()
 
 key = open(os.path.join(os.path.dirname(__file__), '...your_path_to/key.pem'), 'rb').read()
 cert = open(os.path.join(os.path.dirname(__file__), '...your_path_to/certificate.pem'), 'rb').read()
 password = bytes('your_password_123', 'utf8')
+
 p = PKPass(
     ('icon.png', icon),
     ('icon@2x.png', icon_2x),
@@ -70,7 +71,6 @@ p = PKPass(
     ('logo@2x.png', logo_2x),
     ('pass.json', pass_json),
 )
-
 p.sign(cert=cert, key=key, password=password)
 
 with open('pass.pkpass', 'wb') as file:
