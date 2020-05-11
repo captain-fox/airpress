@@ -1,4 +1,6 @@
-# pylint: disable=protected-access, invalid-name, too-many-locals
+# Content of this file is copied from https://github.com/Develatio/django-walletpass
+# and is IP of "Develatio Technologies SL" (https://develat.io/).
+
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.bindings.openssl.binding import Binding
