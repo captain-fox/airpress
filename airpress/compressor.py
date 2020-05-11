@@ -29,7 +29,7 @@ ALLOWED_PKPASS_ASSETS = (
     'thumbnail@3x.png',
 )
 
-REQUIRED_PKPASS_ASSETS = (
+PKPASS_ICONS = (
     'icon.png',
     'icon@2x.png',
     'icon@3x.png'
@@ -127,10 +127,10 @@ class PKPass:
         :return: manifest dictionary
         """
         assert 'pass.json' in self.__assets, 'Pass package must contain `pass.json`'
-        if not any(item in self.__assets for item in REQUIRED_PKPASS_ASSETS):
+        if not any(item in self.__assets for item in PKPASS_ICONS):
             msg = (
                 f'Pass package must have an icon in at least '
-                f'one resolution: {REQUIRED_PKPASS_ASSETS}'
+                f'one resolution: {PKPASS_ICONS}'
             )
             raise AssertionError(msg)
         return {name: sha1(data).hexdigest() for name, data in self.__assets.items()}
