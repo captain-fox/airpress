@@ -35,6 +35,17 @@ It's up to you how to handle `.pkpass` archive from this point.
 `PKPass` will raise human-readable errors in case something is 
 wrong with pass package you're trying to sign and compress. 
 
+## Prepare Pass Type ID certificate
+
+Export your developer certificate as `.p12` file and convert it into a pair of cert and key `.pem` files:
+ 
+`openssl pkcs12 -in "Certificates.p12" -clcerts -nokeys -out certificate.pem`   
+
+`openssl pkcs12 -in "Certificates.p12" -nocerts -out key.pem`
+
+You will be asked for an export password (or export phrase), you may leave it blank or provide a passphrase. 
+It's this value that you later should supply to PKPass compressor (or leave blank).
+
 ## Example
 
 This example shows how to read locally stored assets as `bytes` objects, compress `pkpass` archive
