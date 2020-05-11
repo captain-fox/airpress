@@ -56,7 +56,9 @@ p = PKPass(
 )
 
 p.sign(cert=cert, key=key, password=password)
- 
+
 with open('pass.pkpass', 'wb') as file:
     file.write(bytes(p))
 ```
+
+As a result of this you'll have a signed `pass.pkpass` archive in parent directory of script file.
