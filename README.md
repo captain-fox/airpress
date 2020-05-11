@@ -24,10 +24,8 @@ p = PKPass(
     ('pass.json', bytes(...)),
     ...
 )
-# `password` argument is optional
-p.sign(cert=bytes(...), key=bytes(...), password=bytes(...))
-# Calling `bytes()` on signed `PKPass` will compress it into zip archive and return its `bytes` representation.
-_ = bytes(p) 
+p.sign(cert=bytes(...), key=bytes(...), password=bytes(...))  # `password` argument is optional
+_ = bytes(p)  # Creates `bytes` object containing signed and compressed `.pkpass` archive
 ```
 
 In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need.
