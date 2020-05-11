@@ -32,7 +32,8 @@ It's up to you how to handle `.pkpass` archive from this point.
 
 ## Example
 
-This example shows how to use `airpress` if assets for `pkpass` are local files
+This example shows how to read locally stored assets as `bytes` objects, compress `pkpass` archive
+and save it to script's parent directory.
 
 ```python
 import os
@@ -61,5 +62,3 @@ p.sign(cert=cert, key=key, password=password)
 with open('pass.pkpass', 'wb') as file:
     file.write(bytes(p))
 ```
-
-As a result of this you'll have a signed `pass.pkpass` archive in parent directory of script file.
