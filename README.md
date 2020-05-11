@@ -28,6 +28,7 @@ _ = bytes(p)
 ```
 In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need.
 It's up to you how to handle `.pkpass` archive from this point. 
+`PKPass` will raise human-readable errors in case something is wrong with pass package you're trying to sign. 
 
 ## Example
 
