@@ -124,7 +124,7 @@ class PKPass:
     def manifest_dict(self) -> dict:
         """
         Hash values of data stored in `.__assets`.
-        :return: manifest dictionary
+        :returns: manifest dictionary
         """
         assert 'pass.json' in self.__assets, 'Pass package must contain `pass.json`'
         if not any(item in self.__assets for item in PKPASS_ICONS):
@@ -160,7 +160,7 @@ class PKPass:
         password this value defaults to `''` instead of `None`,
         this allows to pass `None` as explicitly empty password
         and override value stored in `._password` attribute.
-        :return: dict object containing manifest signature
+        :returns: dict object containing manifest signature
         """
 
         cert = cert or self.cert
@@ -188,14 +188,15 @@ class PKPass:
     def pass_package(self) -> dict:
         """
         `.manifest`, `.signature` and `.__assets` gathered into one `dict` object
-        :return: dict containing all parts to create pkpass
+        :returns: dictionary containing all components to create `.pkpass` archive
         """
         return {**self.__assets, 'manifest.json': self.manifest, 'signature': self.signature}
 
     def __bytes__(self):
         """
-        `.pass_package` compressed into zip archive.
-        :return: signed pkpass compressed as zip archive
+        This is the magic. Data stored in `.pass_package` is compressed into a zip archive
+        and encoded as `bytes` object.
+        :returns: bytes object with signed `.pkpass`
         """
         try:
             archive = io.BytesIO()
