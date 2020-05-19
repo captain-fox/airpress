@@ -76,6 +76,7 @@ class PKPass:
                     '`add_to_pass_package` with `validate=False` to disable validation.'
                 )
             assert isinstance(data, bytes), f'{name!r} is not a bytes object.'
+            assert data, f'{name!r} cannot be empty.'
             self.__assets.update({name: data})
 
         if hasattr(self, '_signature'):
