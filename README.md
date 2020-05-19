@@ -1,6 +1,6 @@
 # airpress
 
-[![PyPI version](https://img.shields.io/pypi/v/airpress)](https://pypi.python.org/pypi/airpress)
+[![PyPI version](https://img.shields.io/pypi/v/airpress.svg)](https://pypi.python.org/pypi/airpress)
 [![PyPI version](https://img.shields.io/pypi/pyversions/airpress.svg)](https://pypi.python.org/pypi/airpress)
 [![Build Status](https://travis-ci.org/captain-fox/airpress.svg?branch=master)](https://travis-ci.org/captain-fox/airpress)
 
