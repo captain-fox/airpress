@@ -2,6 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/airpress.svg)](https://pypi.python.org/pypi/airpress)
 [![PyPI version](https://img.shields.io/pypi/pyversions/airpress.svg)](https://pypi.python.org/pypi/airpress)
+[![Build Status](https://travis-ci.org/captain-fox/airpress.svg?branch=master)](https://travis-ci.org/captain-fox/airpress)
 
 Compression tool for PKPass archives.
 
@@ -34,6 +35,9 @@ It's up to you how to handle `.pkpass` archive from this point.
 wrong with pass package you're trying to sign and compress. 
 
 ## Prepare Pass Type ID certificate
+
+[If you don't have your pass type certificate, follow this guide to create one.](https://www.skycore.com/help/creating-pass-signing-certificate/)
+
 
 Export your developer certificate as `.p12` file and convert it into a pair of cert and key `.pem` files:
  
