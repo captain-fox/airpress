@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='airpress',
-    version='0.0.2',
+    version='0.0.3',
     author='Stan Reduta',
     author_email='stanislaw.reduta@gmail.com',
     description='A frustration-free compression tool for PKPass archives.',
