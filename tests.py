@@ -6,6 +6,40 @@ from unittest import (
 from airpress.compressor import PKPass
 
 
+class PKPassInitializerTestCase(TestCase):
+
+    def test_should_initialize_pkpass_without_assets(self):
+        pkpass = PKPass()
+        self.assertTrue(pkpass)
+
+    def test_should_initialize_pkpass_with_assets(self):
+        pkpass = PKPass(
+            ('icon.png', b'00001111'),
+            ('pass.json', b'11110000'),
+        )
+        self.assertTrue(pkpass['icon.png'])
+        self.assertTrue(pkpass['pass.json'])
+
+    def test_should_raise_type_error_during_initialization_with_invalid_assets(self):
+        with self.assertRaises(TypeError):
+            _ = PKPass(
+                ('pass.json', object())
+            )
+
+    def test_should_raise_assertion_error_during_initialization_with_unsupported_asset(self):
+        with self.assertRaises(AssertionError):
+            _ = PKPass(
+                ('unknown.doc', b'11001100')
+            )
+
+    def test_should_explicitly_initialize_pkpass_with_unsupported_asset(self):
+        pkpass = PKPass(
+            ('unknown.doc', b'11001100'),
+            validate=False
+        )
+        self.assertTrue(pkpass['unknown.doc'])
+
+
 class PKPassAssetTestCase(TestCase):
 
     def setUp(self) -> None:
@@ -35,16 +69,20 @@ class PKPassAssetTestCase(TestCase):
         del self.pkpass[asset_name]
 
         with self.assertRaises(KeyError):
-            self.pkpass[asset_name]
+            _ = self.pkpass[asset_name]
 
-    def test_should_raise_assertion_error_for_asset_with_wrong_name_type(self):
+    def test_should_raise_key_error_removing_non_existing_asset_from_pkpass(self):
+        with self.assertRaises(KeyError):
+            del self.pkpass['bobbish.xyz']
+
+    def test_should_raise_type_error_adding_asset_with_wrong_name_type(self):
         asset = ('pass.json'.encode(), b'11110000')
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             self.pkpass.add_to_pass_package(asset)
 
-    def test_should_raise_assertion_error_for_asset_with_wrong_content_type(self):
+    def test_should_raise_type_error_adding_asset_with_wrong_content_type(self):
         asset = ('pass.json', object())
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             self.pkpass.add_to_pass_package(asset)
 
     def test_should_raise_assertion_error_for_asset_with_empty_content(self):
@@ -69,12 +107,12 @@ class PKPassManifestTestCase(TestCase):
 
     def test_should_raise_assertion_error_calling_manifest_without_mandatory_assets(self):
         with self.assertRaises(AssertionError):
-            self.pkpass.manifest_dict
+            _ = self.pkpass.manifest_dict
 
     def test_should_raise_assertion_error_calling_manifest_with_incomplete_pkpass(self):
         self.pkpass.add_to_pass_package(('pass.json', b'11110000'))
         with self.assertRaises(AssertionError):
-            self.pkpass.manifest_dict
+            _ = self.pkpass.manifest_dict
 
     def test_should_create_manifest_dictionary(self):
         self.pkpass.add_to_pass_package(
@@ -90,7 +128,7 @@ class PKPassManifestTestCase(TestCase):
         self.assertIsInstance(self.pkpass.manifest_dict, dict)
         self.assertEqual(expected_manifest_dict, self.pkpass.manifest_dict)
 
-    def test_should_generate_manifest_bytes_object(self):
+    def test_should_generate_non_empty_manifest_bytes_object(self):
         self.pkpass.add_to_pass_package(
             ('icon.png', b'00001111'),
             ('pass.json', b'11110000')
@@ -108,9 +146,13 @@ class PKPassSignatureTestCase(TestCase):
             ('pass.json', b'11110000'),
         )
 
-    def test_should_raise_assertion_error_trying_access_signature_of_unsigned_pkpass(self):
+    def test_should_raise_attribute_error_trying_to_access_signature_of_unsigned_pkpass(self):
+        with self.assertRaises(AttributeError):
+            _ = self.pkpass.signature
+
+    def test_should_raise_assertion_error_if_credentials_were_not_supplied(self):
         with self.assertRaises(AssertionError):
-            self.pkpass.signature
+            _ = self.pkpass.sign()
 
     @skip
     def test_should_sign_pkpass_given_credentials_were_supplied_explicitly(self):
@@ -126,7 +168,10 @@ class PKPassSignatureTestCase(TestCase):
 class PKPassCompressionTestCase(TestCase):
 
     def setUp(self) -> None:
-        pass
+        self.pkpass = PKPass(
+            ('icon.png', b'00001111'),
+            ('pass.json', b'11110000'),
+        )
 
     @skip
     def test_should_compress_signed_pass_package_into_pkpass_archive(self):

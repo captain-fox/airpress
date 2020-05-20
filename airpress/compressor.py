@@ -68,14 +68,16 @@ class PKPass:
         of allowed assets
         """
         for name, data in assets:
-            assert isinstance(name, str), f'{name!r} is not a string.'
+            if not isinstance(name, str):
+                raise TypeError(f'{name!r} is not a string.')
             if validate:
                 assert name in ALLOWED_PKPASS_ASSETS, (
                     f'{name!r} is not on a list of supported pkpass assets: '
                     f'{ALLOWED_PKPASS_ASSETS}.\nTo add this file explicitly call '
                     '`add_to_pass_package` with `validate=False` to disable validation.'
                 )
-            assert isinstance(data, bytes), f'{name!r} is not a bytes object.'
+            if not isinstance(data, bytes):
+                raise TypeError(f'{name!r} is not a bytes object.')
             assert data, f'{name!r} cannot be empty.'
             self.__assets.update({name: data})
 
@@ -89,10 +91,9 @@ class PKPass:
         return self.__assets[name]
 
     def __delitem__(self, name):
-        item = self.__assets.pop(name, False)
-        if item:
-            if hasattr(self, '_signature'):
-                delattr(self, '_signature')
+        del self.__assets[name]
+        if hasattr(self, '_signature'):
+            delattr(self, '_signature')
 
     @property
     def cert(self):
@@ -100,7 +101,8 @@ class PKPass:
 
     @cert.setter
     def cert(self, value):
-        assert isinstance(value, bytes), 'Certificate must be `bytes` object'
+        if not isinstance(value, bytes):
+            raise TypeError('Certificate must be `bytes` object')
         self.__cert = value
 
     @property
@@ -109,7 +111,8 @@ class PKPass:
 
     @key.setter
     def key(self, value):
-        assert isinstance(value, bytes), 'Key must be `bytes` object'
+        if not isinstance(value, bytes):
+            raise TypeError('Key must be `bytes` object')
         self.__key = value
 
     @property
@@ -182,7 +185,7 @@ class PKPass:
     def signature(self) -> bytes:
         if not hasattr(self, '_signature'):
             msg = 'You must call `.sign()` before accessing `.signature`.'
-            raise AssertionError(msg)
+            raise AttributeError(msg)
         return self._signature
 
     @property
