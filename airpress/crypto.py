@@ -1,5 +1,7 @@
-# Content of this file is copied from https://github.com/Develatio/django-walletpass
-# and is IP of "Develatio Technologies SL" (https://develat.io/).
+# pkcs signature implementation was generously provided on MIT license terms
+# by gentlemen of "Develatio Technologies SL", which is much appreciated.
+# To learn more about their projects visit https://develat.io/ or check out
+# original implementation at https://github.com/Develatio/django-walletpass
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
