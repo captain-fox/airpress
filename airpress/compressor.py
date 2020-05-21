@@ -198,8 +198,9 @@ class PKPass:
 
     def __bytes__(self):
         """
-        This is the magic. Data stored in `.pass_package` is compressed into a zip archive
-        and encoded as `bytes` object.
+        This is the magic.
+        `.pass_package` is compressed into zip
+        archive and returned as `bytes` object.
         :returns: bytes object with signed `.pkpass`
         """
         try:
@@ -214,5 +215,5 @@ class PKPass:
                     buffer.writestr(name, data)
             return archive.getvalue()
         except AssertionError as e:
-            msg = 'Failed to zip pkpass because of exception.'
+            msg = 'Failed to zip `.pkpass` because of another exception.'
             raise AssertionError(msg) from e
