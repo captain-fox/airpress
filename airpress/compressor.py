@@ -153,7 +153,7 @@ class PKPass:
         return bytes(manifest_json, 'utf8')
 
     def sign(self, cert: bytes = None, key: bytes = None,
-             wwdr: bytes = WWDR_CA, password: bytes = '') -> dict:
+             wwdr: bytes = WWDR_CA, password: bytes = '') -> bytes:
         """
         Signs `.manifest`.
         :param cert: bytes object containing developer certificate
@@ -214,6 +214,6 @@ class PKPass:
                 for name, data in self.pass_package.items():
                     buffer.writestr(name, data)
             return archive.getvalue()
-        except AssertionError as e:
+        except Exception as e:
             msg = 'Failed to zip `.pkpass` because of another exception.'
-            raise AssertionError(msg) from e
+            raise Exception(msg) from e
