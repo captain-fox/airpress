@@ -58,3 +58,24 @@ class PKPassSignatureTestCase(TestCase):
         self.pkpass.sign()
 
         self.assertTrue(self.pkpass.signature)
+
+    def test_should_reset_signature_if_asset_was_added_after_signing(self):
+        self.pkpass.cert = self.cert
+        self.pkpass.key = self.key
+        self.pkpass.sign()
+
+        self.pkpass['icon@2x.png'] = b'11000011'
+
+        with self.assertRaises(AttributeError):
+            _ = self.pkpass.signature
+
+    def test_should_reset_signature_if_asset_was_removed_after_signing(self):
+        self.pkpass['icon@2x.png'] = b'11000011'
+        self.pkpass.cert = self.cert
+        self.pkpass.key = self.key
+        self.pkpass.sign()
+
+        del self.pkpass['icon@2x.png']
+
+        with self.assertRaises(AttributeError):
+            _ = self.pkpass.signature

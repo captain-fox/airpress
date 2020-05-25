@@ -214,6 +214,6 @@ class PKPass:
                 for name, data in self.pass_package.items():
                     buffer.writestr(name, data)
             return archive.getvalue()
-        except Exception as e:
+        except (AssertionError, AttributeError) as e:
             msg = 'Failed to zip `.pkpass` because of another exception.'
             raise Exception(msg) from e
