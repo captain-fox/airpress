@@ -11,3 +11,4 @@ build/
 *.egg
 *.egg-info/
 dist/
+local/
