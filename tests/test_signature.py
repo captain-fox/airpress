@@ -1,81 +1,69 @@
-import os
-
-from unittest import TestCase
-from airpress.compressor import PKPass
+import pytest
 
 
-class PKPassSignatureTestCase(TestCase):
+def test_should_raise_attribute_error_trying_to_access_signature_of_unsigned_pkpass(pkpass_with_assets):
+    with pytest.raises(AttributeError):
+        _ = pkpass_with_assets.signature
 
-    def setUp(self) -> None:
-        self.pkpass = PKPass(
-            ('icon.png', b'00001111'),
-            ('pass.json', b'11110000'),
-        )
-        with open(
-                os.path.join(os.path.dirname(__file__), 'credentials/unprotected_dummy_key.pem'),
-                'rb'
-        ) as k:
-            self.key = k.read()
-        with open(
-                os.path.join(os.path.dirname(__file__), 'credentials/unprotected_dummy_cert.pem'),
-                'rb'
-        ) as c:
-            self.cert = c.read()
 
-    def test_should_raise_attribute_error_trying_to_access_signature_of_unsigned_pkpass(self):
-        with self.assertRaises(AttributeError):
-            _ = self.pkpass.signature
+def test_should_raise_assertion_error_trying_to_sign_pkpass_without_credentials(pkpass_with_assets):
+    with pytest.raises(AssertionError):
+        pkpass_with_assets.sign()
 
-    def test_should_raise_assertion_error_trying_to_sign_pkpass_without_credentials(self):
-        with self.assertRaises(AssertionError):
-            self.pkpass.sign()
 
-    def test_should_raise_assertion_error_trying_to_sign_pkpass_without_certificate(self):
-        with self.assertRaises(AssertionError):
-            self.pkpass.sign(key=self.key)
+def test_should_raise_assertion_error_trying_to_sign_pkpass_without_certificate(pkpass_with_assets, key):
+    with pytest.raises(AssertionError):
+        pkpass_with_assets.sign(key=key)
 
-    def test_should_raise_assertion_error_trying_to_sign_pkpass_without_key(self):
-        with self.assertRaises(AssertionError):
-            self.pkpass.sign(key=self.cert)
 
-    def test_should_raise_assertion_error_trying_to_sign_pkpass_without_wwdr_certificate(self):
-        with self.assertRaises(AssertionError):
-            self.pkpass.sign(wwdr=b'')
+def test_should_raise_assertion_error_trying_to_sign_pkpass_without_key(pkpass_with_assets, cert):
+    with pytest.raises(AssertionError):
+        pkpass_with_assets.sign(key=cert)
 
-    def test_sign_method_returns_signature_as_bytes_object(self):
-        signature = self.pkpass.sign(cert=self.cert, key=self.key)
-        self.assertTrue(signature)
-        self.assertIs(type(signature), bytes)
 
-    def test_should_sign_pkpass_with_credentials_supplied_explicitly(self):
-        self.pkpass.sign(cert=self.cert, key=self.key)
-        self.assertTrue(self.pkpass.signature)
+def test_should_raise_assertion_error_trying_to_sign_pkpass_without_wwdr_cert(pkpass_with_assets, cert, key):
+    with pytest.raises(AssertionError):
+        pkpass_with_assets.sign(cert=cert, key=key, wwdr=None)
 
-    def test_should_sign_pkpass_with_credentials_supplied_implicitly(self):
-        self.pkpass.cert = self.cert
-        self.pkpass.key = self.key
 
-        self.pkpass.sign()
+def test_sign_method_returns_signature_as_bytes_object(pkpass_with_assets, cert, key):
+    signature = pkpass_with_assets.sign(cert=cert, key=key)
+    assert signature
+    assert type(signature) is bytes
 
-        self.assertTrue(self.pkpass.signature)
 
-    def test_should_reset_signature_if_asset_was_added_after_signing(self):
-        self.pkpass.cert = self.cert
-        self.pkpass.key = self.key
-        self.pkpass.sign()
+def test_should_sign_pkpass_with_credentials_supplied_explicitly(pkpass_with_assets, cert, key):
+    pkpass_with_assets.sign(cert=cert, key=key)
+    assert pkpass_with_assets.signature
 
-        self.pkpass['icon@2x.png'] = b'11000011'
 
-        with self.assertRaises(AttributeError):
-            _ = self.pkpass.signature
+def test_should_sign_pkpass_with_credentials_supplied_implicitly(pkpass_with_assets, cert, key):
+    pkpass_with_assets.cert = cert
+    pkpass_with_assets.key = key
 
-    def test_should_reset_signature_if_asset_was_removed_after_signing(self):
-        self.pkpass['icon@2x.png'] = b'11000011'
-        self.pkpass.cert = self.cert
-        self.pkpass.key = self.key
-        self.pkpass.sign()
+    pkpass_with_assets.sign()
 
-        del self.pkpass['icon@2x.png']
+    assert pkpass_with_assets.signature
 
-        with self.assertRaises(AttributeError):
-            _ = self.pkpass.signature
+
+def test_should_reset_signature_if_asset_was_added_after_signing(pkpass_with_assets, cert, key):
+    pkpass_with_assets.cert = cert
+    pkpass_with_assets.key = key
+    pkpass_with_assets.sign()
+
+    pkpass_with_assets['icon@2x.png'] = b'11000011'
+
+    with pytest.raises(AttributeError):
+        _ = pkpass_with_assets.signature
+
+
+def test_should_reset_signature_if_asset_was_removed_after_signing(pkpass_with_assets, cert, key):
+    pkpass_with_assets['icon@2x.png'] = b'11000011'
+    pkpass_with_assets.cert = cert
+    pkpass_with_assets.key = key
+    pkpass_with_assets.sign()
+
+    del pkpass_with_assets['icon@2x.png']
+
+    with pytest.raises(AttributeError):
+        _ = pkpass_with_assets.signature

@@ -6,4 +6,4 @@ python:
 install:
   - pip install cryptography>=2.9.2
 script:
-  - python -m unittest discover
+  - pytest
