@@ -4,10 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/pyversions/airpress.svg)](https://pypi.python.org/pypi/airpress)
 [![Build Status](https://travis-ci.org/captain-fox/airpress.svg?branch=master)](https://travis-ci.org/captain-fox/airpress)
 
-Compression tool for PKPass archives.
-
-AirPress does compression in runtime memory without creating temporary files or directories,
-which is handy for server-side implementation.
+AirPress lets you create, sign and zip PKPass archives for Apple Wallet in runtime memory without a need for temporary files or directories.
 
 ## Installation
 From PyPI:
@@ -28,11 +25,29 @@ p = PKPass(
 p.sign(cert=bytes(...), key=bytes(...), password=bytes(...))  # `password` argument is optional
 _ = bytes(p)  # Creates `bytes` object containing signed and compressed `.pkpass` archive
 ```
-
-In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need.
-It's up to you how to handle `.pkpass` archive from this point. 
+In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need. 
 `PKPass` will raise human-readable errors in case something is 
 wrong with pass package you're trying to sign and compress. 
+
+## Manage assets in pass package
+Accessing `PKPass` assets that are already added to pass package is as easy as working with dictionary.
+
+Retrieve asset: 
+```python
+icon = p['icon.png']
+``` 
+
+It can also be used as alternative to add/update asset:
+
+```python
+p['icon.png'] = bytes(...)
+```
+
+Remove asset from pass package:
+```python
+del p['logo.png']
+```
+
 
 ## Prepare Pass Type ID certificate
 
@@ -48,34 +63,31 @@ Export your developer certificate as `.p12` file and convert it into a pair of c
 You will be asked for an export password (or export phrase), you may leave it blank or provide a passphrase. 
 It's this value that you later should supply to PKPass compressor (or leave blank).
 
-## Example
+## Example with local files
 
-This example shows how to read locally stored assets as `bytes` objects, compress `pkpass` archive
+In case you'd like to play around with locally stored files, or your server keeps assets in the same file storage
+as source code, this example shows you how to read locally stored assets as `bytes` objects, compress `pkpass` archive
 and save it to script's parent directory.
 
 ```python
 import os
 from airpress import PKPass
 
-icon = open(os.path.join(os.path.dirname(__file__), '...your_path_to/icon.png'), 'rb').read()
-icon_2x = open(os.path.join(os.path.dirname(__file__), '...your_path_to/icon@2x.png'), 'rb').read()
-logo = open(os.path.join(os.path.dirname(__file__), '...your_path_to/logo.png'), 'rb').read()
-logo_2x = open(os.path.join(os.path.dirname(__file__), '...your_path_to/logo@2x.png'), 'rb').read()
-# It is more likely that you'll be dumping python dictionary into json file, but as an example `pass.json` is a file
-pass_json = open(os.path.join(os.path.dirname(__file__), '...your_path_to/pass.json'), 'rb').read()
 
-key = open(os.path.join(os.path.dirname(__file__), '...your_path_to/key.pem'), 'rb').read()
-cert = open(os.path.join(os.path.dirname(__file__), '...your_path_to/certificate.pem'), 'rb').read()
-password = bytes('your_password_123', 'utf8')
+p = PKPass()
 
-p = PKPass(
-    ('icon.png', icon),
-    ('icon@2x.png', icon_2x),
-    ('logo.png', logo),
-    ('logo@2x.png', logo_2x),
-    ('pass.json', pass_json),
-)
-p.sign(cert=cert, key=key, password=password)
+for filename in os.listdir(os.getcwd()):
+    with open(os.path.join(os.cwd(), filename), 'rb') as f:
+    asset = f.read()
+    p.add_to_pass_package((filename, asset))
+
+with open(os.path.join(os.path.dirname(__file__), '...your_path_to/key.pem'), 'rb') as f:
+    key = f.read()
+with open(os.path.join(os.path.dirname(__file__), '...your_path_to/certificate.pem'), 'rb') as f:
+    cert = f.read()
+    
+
+p.sign(cert=cert, key=key, password=bytes('your_password_123', 'utf8'))
 
 with open('pass.pkpass', 'wb') as file:
     file.write(bytes(p))
