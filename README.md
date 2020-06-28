@@ -4,10 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/pyversions/airpress.svg)](https://pypi.python.org/pypi/airpress)
 [![Build Status](https://travis-ci.org/captain-fox/airpress.svg?branch=master)](https://travis-ci.org/captain-fox/airpress)
 
-Compression tool for PKPass archives.
-
-AirPress does compression in runtime memory without creating temporary files or directories,
-which is handy for server-side implementation.
+AirPress lets you create, sign and zip PKPass archives for Apple Wallet in runtime memory without a need for temporary files or directories.
 
 ## Installation
 From PyPI:
@@ -28,11 +25,29 @@ p = PKPass(
 p.sign(cert=bytes(...), key=bytes(...), password=bytes(...))  # `password` argument is optional
 _ = bytes(p)  # Creates `bytes` object containing signed and compressed `.pkpass` archive
 ```
-
-In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need.
-It's up to you how to handle `.pkpass` archive from this point. 
+In most cases you're likely to return `pkpass` as `http` response and `bytes` object is exactly what you need. 
 `PKPass` will raise human-readable errors in case something is 
 wrong with pass package you're trying to sign and compress. 
+
+## Manage assets in pass package
+Accessing `PKPass` assets that are already added to pass package is as easy as working with dictionary.
+
+Retrieve asset: 
+```python
+icon = p['icon.png']
+``` 
+
+It can also be used as alternative to add/update asset:
+
+```python
+p['icon.png'] = bytes(...)
+```
+
+Remove asset from pass package:
+```python
+del p['logo.png']
+```
+
 
 ## Prepare Pass Type ID certificate
 
@@ -48,9 +63,10 @@ Export your developer certificate as `.p12` file and convert it into a pair of c
 You will be asked for an export password (or export phrase), you may leave it blank or provide a passphrase. 
 It's this value that you later should supply to PKPass compressor (or leave blank).
 
-## Example
+## Example with local files
 
-This example shows how to read locally stored assets as `bytes` objects, compress `pkpass` archive
+In case you'd like to play around with locally stored files, or your server keeps assets in the same file storage
+as source code, this example shows you how to read locally stored assets as `bytes` objects, compress `pkpass` archive
 and save it to script's parent directory.
 
 ```python
