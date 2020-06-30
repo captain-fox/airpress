@@ -74,21 +74,35 @@ import os
 from airpress import PKPass
 
 
+# Create empty pass package
 p = PKPass()
 
-for filename in os.listdir(os.getcwd()):
-    with open(os.path.join(os.cwd(), filename), 'rb') as f:
-    asset = f.read()
-    p.add_to_pass_package((filename, asset))
+# Add locally stored assets
+for filename in os.listdir('your_dir_with_assets'):
+    with open(os.path.join(os.path.dirname(__file__), 'your_dir_with_assets', filename), 'rb') as file:
+        data = file.read()
+        # Add each individual asset to pass package
+        p.add_to_pass_package((filename, data))
 
-with open(os.path.join(os.path.dirname(__file__), '...your_path_to/key.pem'), 'rb') as f:
-    key = f.read()
-with open(os.path.join(os.path.dirname(__file__), '...your_path_to/certificate.pem'), 'rb') as f:
-    cert = f.read()
-    
+# Add locally stored credentials
+with open(
+        os.path.join(os.path.dirname(__file__), 'your_dir_with_credentials/key.pem'), 'rb'
+) as key, open(
+    os.path.join(os.path.dirname(__file__), 'your_dir_with_credentials/certificate.pem'), 'rb'
+) as cert:
+    # Add credentials to pass package 
+    p.key = key.read()
+    p.cert = cert.read()
+    p.password = bytes('passpass', 'utf8')
 
-p.sign(cert=cert, key=key, password=bytes('your_password_123', 'utf8'))
-
-with open('pass.pkpass', 'wb') as file:
+# As we've added credentials to pass package earlier we don't need to supply them to `.sign()`
+# This is an alternative to calling .sign() method with credentials as arguments. 
+p.sign()
+ 
+# Create pkpass file with pass data 
+with open('your_dir_for_output/data.pkpass', 'wb') as file:
     file.write(bytes(p))
 ```
+
+Hope you find this package useful!
+I'd love to hear your feedback and suggestions for this tiny library as there's always room for improvement.
