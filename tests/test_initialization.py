@@ -4,7 +4,7 @@ from airpress.compressor import PKPass
 
 def test_should_initialize_pkpass_without_assets():
     pkpass = PKPass()
-    assert pkpass
+    assert len(pkpass) == 0
 
 
 def test_should_initialize_pkpass_with_assets():
