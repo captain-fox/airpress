@@ -135,6 +135,15 @@ class PKPass:
         if hasattr(self, '_signature'):
             delattr(self, '_signature')
 
+    def __contains__(self, item):
+        return item in self.__assets
+
+    def __iter__(self):
+        return iter(self.__assets)
+
+    def __len__(self):
+        return len(self.__assets)
+
     @property
     def cert(self):
         return self.__cert
