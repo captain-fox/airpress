@@ -236,6 +236,10 @@ class PKPass:
         """
         return {**self.__assets, 'manifest.json': self.manifest, 'signature': self.signature}
 
+    def __call__(self, *args, **kwargs):
+        """Calls __bytes__ method and returns compressed `.pkpass` file"""
+        return self.__bytes__()
+
     def __bytes__(self):
         """
         This is the magic.
