@@ -23,8 +23,8 @@ def test_should_raise_type_error_during_initialization_with_assets_of_wrong_type
         )
 
 
-def test_should_raise_assertion_error_during_initialization_with_unsupported_asset():
-    with pytest.raises(AssertionError):
+def test_should_raise_exception_during_initialization_with_unsupported_asset():
+    with pytest.raises(NameError):
         _ = PKPass(
             ('unknown.doc', b'11001100')
         )

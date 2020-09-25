@@ -110,15 +110,16 @@ class PKPass:
         for name, data in assets:
             if not isinstance(name, str):
                 raise TypeError(f'{name!r} is not a string.')
-            if validate:
-                assert name in ALLOWED_PKPASS_ASSETS, (
+            if validate and name not in ALLOWED_PKPASS_ASSETS:
+                raise NameError(
                     f'{name!r} is not on a list of supported pkpass assets: '
                     f'{ALLOWED_PKPASS_ASSETS}.\nTo add this file explicitly call '
                     '`add_to_pass_package` with `validate=False` to disable validation.'
                 )
             if not isinstance(data, bytes):
                 raise TypeError(f'{name!r} is not a bytes object.')
-            assert data, f'{name!r} cannot be empty.'
+            if not data:
+                raise ValueError(f'{name!r} cannot be empty.')
             self.__assets.update({name: data})
 
         if hasattr(self, '_signature'):
@@ -161,7 +162,8 @@ class PKPass:
 
     @password.setter
     def password(self, value):
-        assert value is None or isinstance(value, bytes), 'Password must be None or `bytes` object'
+        if value is not None and not isinstance(value, bytes):
+            raise TypeError('Password must be None or `bytes` object')
         self.__password = value
 
     @property
@@ -170,10 +172,11 @@ class PKPass:
         Hash values of data stored in `.__assets`.
         :returns: manifest dictionary
         """
-        assert 'pass.json' in self.__assets, 'Pass package must contain `pass.json`'
+        if 'pass.json' not in self.__assets:
+            raise KeyError('Pass package must contain `pass.json`')
         if not any(item in self.__assets for item in PKPASS_ICONS):
             msg = f'Pass package must have an icon in at least one resolution: {PKPASS_ICONS}'
-            raise AssertionError(msg)
+            raise KeyError(msg)
         return {name: sha1(data).hexdigest() for name, data in self.__assets.items()}
 
     @property
@@ -217,7 +220,7 @@ class PKPass:
                 'You must provide `certificate`, `key`[, `password` and `wwdr` certificate] '
                 'during PKPass initialization, explicitly or as arguments to `.sign()` method.'
             )
-            raise AssertionError(msg)
+            raise AttributeError(msg)
         self._signature = pkcs7_sign(cert, key, wwdr, self.manifest, password)
         return self._signature
 
@@ -258,6 +261,6 @@ class PKPass:
                 for name, data in self.pass_package.items():
                     buffer.writestr(name, data)
             return archive.getvalue()
-        except (AssertionError, AttributeError) as e:
+        except AttributeError as e:
             msg = 'Failed to zip `.pkpass` because of another exception.'
-            raise Exception(msg) from e
+            raise AttributeError(msg) from e

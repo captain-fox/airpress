@@ -30,7 +30,7 @@ In most cases you're likely to return `pkpass` as `http` response and `bytes` ob
 wrong with pass package you're trying to sign and compress. 
 
 ## Manage assets in pass package
-Accessing `PKPass` assets that are already added to pass package is as easy as working with dictionary.
+Accessing `PKPass` assets that are already added to pass package is as simple as working with dictionary.
 
 Retrieve asset: 
 ```python
@@ -85,11 +85,8 @@ for filename in os.listdir('your_dir_with_assets'):
         p.add_to_pass_package((filename, data))
 
 # Add locally stored credentials
-with open(
-        os.path.join(os.path.dirname(__file__), 'your_dir_with_credentials/key.pem'), 'rb'
-) as key, open(
-    os.path.join(os.path.dirname(__file__), 'your_dir_with_credentials/certificate.pem'), 'rb'
-) as cert:
+with open(os.path.join(os.path.dirname(__file__), 'your_dir_with_credentials/key.pem'), 'rb') as key, \
+     open(os.path.join(os.path.dirname(__file__), 'your_dir_with_credentials/certificate.pem'), 'rb') as cert:
     # Add credentials to pass package 
     p.key = key.read()
     p.cert = cert.read()

@@ -6,23 +6,23 @@ def test_should_raise_attribute_error_trying_to_access_signature_of_unsigned_pkp
         _ = pkpass_with_assets.signature
 
 
-def test_should_raise_assertion_error_trying_to_sign_pkpass_without_credentials(pkpass_with_assets):
-    with pytest.raises(AssertionError):
+def test_should_raise_exception_trying_to_sign_pkpass_without_credentials(pkpass_with_assets):
+    with pytest.raises(AttributeError):
         pkpass_with_assets.sign()
 
 
-def test_should_raise_assertion_error_trying_to_sign_pkpass_without_certificate(pkpass_with_assets, key):
-    with pytest.raises(AssertionError):
+def test_should_raise_exception_trying_to_sign_pkpass_without_certificate(pkpass_with_assets, key):
+    with pytest.raises(AttributeError):
         pkpass_with_assets.sign(key=key)
 
 
-def test_should_raise_assertion_error_trying_to_sign_pkpass_without_key(pkpass_with_assets, cert):
-    with pytest.raises(AssertionError):
+def test_should_raise_exception_trying_to_sign_pkpass_without_key(pkpass_with_assets, cert):
+    with pytest.raises(AttributeError):
         pkpass_with_assets.sign(key=cert)
 
 
-def test_should_raise_assertion_error_trying_to_sign_pkpass_without_wwdr_cert(pkpass_with_assets, cert, key):
-    with pytest.raises(AssertionError):
+def test_should_raise_exception_trying_to_sign_pkpass_without_wwdr_cert(pkpass_with_assets, cert, key):
+    with pytest.raises(AttributeError):
         pkpass_with_assets.sign(cert=cert, key=key, wwdr=None)
 
 

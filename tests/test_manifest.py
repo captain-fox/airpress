@@ -1,14 +1,14 @@
 import pytest
 
 
-def test_should_raise_assertion_error_calling_manifest_without_mandatory_assets(pkpass):
-    with pytest.raises(AssertionError):
+def test_should_raise_key_error_calling_manifest_without_mandatory_assets(pkpass):
+    with pytest.raises(KeyError):
         _ = pkpass.manifest_dict
 
 
-def test_should_raise_assertion_error_calling_manifest_with_incomplete_pkpass(pkpass):
+def test_should_raise_key_error_calling_manifest_with_incomplete_pkpass(pkpass):
     pkpass.add_to_pass_package(('pass.json', b'11110000'))
-    with pytest.raises(AssertionError):
+    with pytest.raises(KeyError):
         _ = pkpass.manifest_dict
 
 

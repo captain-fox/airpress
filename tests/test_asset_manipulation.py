@@ -50,15 +50,15 @@ def test_should_raise_type_error_adding_asset_with_wrong_content_type(pkpass):
         pkpass.add_to_pass_package(asset)
 
 
-def test_should_raise_assertion_error_for_asset_with_empty_content(pkpass):
+def test_should_raise_value_error_for_asset_with_empty_content(pkpass):
     asset = ('pass.json', b'')
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         pkpass.add_to_pass_package(asset)
 
 
-def test_should_raise_assertion_error_adding_unsupported_asset(pkpass):
+def test_should_raise_exception_adding_unsupported_asset(pkpass):
     asset = ('unknown.doc', b'11000011')
-    with pytest.raises(AssertionError):
+    with pytest.raises(NameError):
         pkpass.add_to_pass_package(asset)
 
 
