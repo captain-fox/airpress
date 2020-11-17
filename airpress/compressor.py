@@ -2,6 +2,7 @@ import io
 import json
 import zipfile
 from hashlib import sha1
+from collections import UserDict
 
 from .crypto import pkcs7_sign
 
@@ -128,13 +129,37 @@ class PKPass:
     def __setitem__(self, name, data):
         self.add_to_pass_package((name, data))
 
-    def __getitem__(self, name):
-        return self.__assets[name]
-
     def __delitem__(self, name):
         del self.__assets[name]
         if hasattr(self, '_signature'):
             delattr(self, '_signature')
+
+    def __contains__(self, item):
+        return item in self.__assets
+
+    def __len__(self):
+        return len(self.__assets)
+
+    def __iter__(self):
+        return iter(self.__assets)
+
+    def __getitem__(self, item):
+        return self.__assets[item]
+
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self.__assets == other.__assets
+
+    def __bool__(self):
+        return hasattr(self, '_signature')
+
+    def __repr__(self):
+        return f'{type(self).__name__}(...)'
+
+    def __str__(self):
+        is_signed = 'Signed' if hasattr(self, '_signature') else 'Unsigned'
+        return f'{is_signed} pkpass instance {id(self)}'
 
     @property
     def cert(self):

@@ -8,7 +8,7 @@ setuptools.setup(
     version='1.0.3',
     author='Stan Reduta',
     author_email='stanislaw.reduta@gmail.com',
-    description='A frustration-free compression tool for PKPass archives.',
+    description='Frustration-free compression tool for PKPass archives.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='MIT',

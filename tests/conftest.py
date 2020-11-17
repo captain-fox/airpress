@@ -9,7 +9,7 @@ def pkpass():
 
 
 @pytest.fixture
-def pkpass_with_assets():
+def pkpass_with_two_assets():
     p = PKPass(
         ('icon.png', b'00001111'),
         ('pass.json', b'11110000'),
