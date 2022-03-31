@@ -3,7 +3,8 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
+  - "3.9"
 install:
-  - pip install cryptography>=2.9.2
+  - pip install cryptography==3.4.8
 script:
   - pytest

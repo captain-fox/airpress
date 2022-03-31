@@ -14,12 +14,14 @@ cffi = Binding.ffi
 
 # SMIME isn't supported by pyca/cryptography:
 # https://github.com/pyca/cryptography/issues/1621
-def pkcs7_sign(certcontent: bytes,
-               keycontent: bytes,
-               wwdr_certificate: bytes,
-               data: bytes,
-               key_password=None,
-               flag=copenssl.PKCS7_BINARY | copenssl.PKCS7_DETACHED):
+def pkcs7_sign(
+    certcontent: bytes,
+    keycontent: bytes,
+    wwdr_certificate: bytes,
+    data: bytes,
+    key_password=None,
+    flag=copenssl.PKCS7_BINARY | copenssl.PKCS7_DETACHED,
+):
 
     """
     Sign data with PKCS#7.
