@@ -35,3 +35,13 @@ def cert():
     ) as c:
         cert = c.read()
     return cert
+
+
+@pytest.fixture
+def wwdr_cert():
+    with open(
+        os.path.join(os.path.dirname(__file__), "credentials/AppleWWDRCA.pem"),
+        "rb",
+    ) as c:
+        cert = c.read()
+    return cert
