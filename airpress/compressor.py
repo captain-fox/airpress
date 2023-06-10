@@ -6,9 +6,6 @@ from hashlib import sha1
 # from .crypto import pkcs7_sign
 from .crypto2 import pkcs7_sign
 
-# Downloaded from: https://www.apple.com/certificateauthority/
-# Certificate URL: https://developer.apple.com/certificationauthority/AppleWWDRCA.cer
-# Valid through 02/07/2023 21:48:47 UTC
 
 ALLOWED_PKPASS_ASSETS = (
     "background.png",
