@@ -1,10 +1,11 @@
 import io
 import json
 import zipfile
-from hashlib import sha1
 
-# from .crypto import pkcs7_sign
-from .crypto2 import pkcs7_sign
+from hashlib import sha1
+from typing import Optional
+
+from .crypto import pkcs7_sign
 
 
 ALLOWED_PKPASS_ASSETS = (
@@ -49,7 +50,7 @@ class PKPass:
         validate: bool = True,
     ):
 
-        self.__assets = dict()
+        self.__assets: dict = dict()
         self.key = key
         self.cert = cert
         self.password = password
@@ -113,15 +114,15 @@ class PKPass:
             raise TypeError("Key must be `bytes` object")
         self.__key = value
 
-    @property
-    def wwdr_cert(self):
-        return self.__wwdr_cert
-
-    @wwdr_cert.setter
-    def wwdr_cert(self, value):
-        if not isinstance(value, bytes):
-            raise TypeError("Certificate must be `bytes` object")
-        self.__wwdr_cert = value
+    # @property
+    # def wwdr_cert(self):
+    #     return self.__wwdr_cert
+    #
+    # @wwdr_cert.setter
+    # def wwdr_cert(self, value):
+    #     if not isinstance(value, bytes):
+    #         raise TypeError("Certificate must be `bytes` object")
+    #     self.__wwdr_cert = value
 
     @property
     def password(self):
@@ -162,10 +163,10 @@ class PKPass:
 
     def sign(
         self,
-        cert: bytes = None,
-        key: bytes = None,
-        wwdr: bytes = None,
-        password: bytes = "",
+        cert: Optional[bytes] = None,
+        key: Optional[bytes] = None,
+        password: bytes = b"",
+        wwdr: Optional[bytes] = None,
     ) -> bytes:
         """
         Signs `.manifest`.
@@ -182,7 +183,8 @@ class PKPass:
 
         cert = cert or self.cert
         key = key or self.key
-        if password == "":
+        # wwdr = wwdr or self.wwdr_cert
+        if password == b"":
             password = self.password if self.password else None
 
         if not all([cert, key, wwdr]):
